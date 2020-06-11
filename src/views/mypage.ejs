@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+
+<body>
+<%- include('partials/login_nav') %>
+
+<div class="col-md-4 offset-2">
+    <form action="">
+        <div class="form-group" id="app">
+            <label for="">Profile</label>
+            <textarea v-model="profile" class="form-control" id="" rows="3"
+                      cols="10"></textarea>
+            <button @click="updateProfile(<%= user.id %>)" class="btn btn-primary mt-2">
+                Update
+            </button>
+        </div>
+    </form>
+    <form action="">
+        <%= user.metadata.picture %>"
+        <div class="picture">
+            pucture
+            <img src="" alt="">
+        </div>
+    </form>
+
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            profile: "<%=user.metadata.profile%>"
+            // profile: "aaaaaaaaaa"
+        },
+        methods: {
+            updateProfile: function (userId) {
+                axios.put('/profile/' + userId, {
+                    profile: this.profile,
+                })
+                .then(res => console.log)
+                .catch(err => console.log);
+            }
+        }
+    })
+</script>

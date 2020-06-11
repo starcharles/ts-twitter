@@ -1,0 +1,35 @@
+<div class="input-group">
+    <% if(user){ %>
+        <div class="input-group-prepend">
+            <span class="input-group-text">Input Comment</span>
+        </div>
+    <% } %>
+    <form  id="app" action="/comment" method="post">
+        <% if(user){ %>
+            <input type="hidden" name="id" value="<%= user.id %>"></input>
+            <input type="hidden" name="name" value="<%= user.name %>"></input>
+            <div>{{words.length}}字</div>
+            <textarea v-model="words" @input="countWords()" name="text" rows="5" cols="60"
+                      class="form-control" placeholder="140字以内で入力してください。"></textarea>
+            <button v-bind:disabled="disabled" type="submit" class="btn btn-primary">Submit</button>
+        <% } %>
+    </form>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            words: '',
+            disabled: false,
+        },
+        methods: {
+            countWords: function () {
+                if(this.words.length > 140){
+                    alert("140字を超えました");
+                    this.disabled=true;
+                }
+            }
+        }
+    });
+
+</script>

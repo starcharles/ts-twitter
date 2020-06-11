@@ -1,0 +1,88 @@
+<%- include('partials/header') %>
+
+<body>
+<%- include('partials/nav') %>
+
+<table class="table mt-5">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Comment</th>
+        <th>FavTotal</th>
+        <th>FavButton</th>
+    </tr>
+    </thead>
+    <tbody id="fav-btn">
+    <% for (var i = 0; i < posts.length ; i++) { %>
+        <tr>
+            <th><%= i + 1 %></th>
+            <td>
+                <a href="/profile/<%= posts[i].user.id %>">
+                    <%= posts[i].user.name %>
+                </a>
+            </td>
+            <td>
+                <%= posts[i].comment %>
+            </td>
+            <td>
+                <%= posts[i].fav %>
+<!--                <fav-total post_id="<%= posts[i].id %>"></fav-total>-->
+            </td>
+            <td>
+                <fav-button post_id="<%= posts[i].id %>"></fav-button>
+            </td>
+        </tr>
+    <% } %>
+    </tbody>
+</table>
+
+<%- include('input') %>
+
+<script>
+    Vue.component('fav-total', {
+        data: function () {
+            return {
+                count: 0
+            }
+        },
+        props: ['post_id'],
+        template: '<span v-on:load="getFav(post_id)">{{count}}</span>',
+        methods: {
+            getFav: (postId) => {
+                axios.get(`/fav`, {
+                    params: {
+                        postId
+                    }
+                })
+                .then(res => {
+                    console.log(res);
+                    this.count = res.data.count;
+                })
+                .catch(err => console.log);
+
+            }
+        }
+    });
+    Vue.component('fav-button', {
+        props: ['post_id'],
+        template: '<button v-on:click="sendFav(post_id)">Fav</button>',
+        methods: {
+            sendFav: function (postId) {
+                axios.post('/fav', {
+                    message: "hello",
+                    postId,
+                })
+                .then(res => {
+                    console.log(res);
+                    location.reload();
+                })
+                .catch(err => console.log(err));
+
+            }
+        }
+    });
+    var app = new Vue({el: '#fav-btn'});
+</script>
+</body>
+
